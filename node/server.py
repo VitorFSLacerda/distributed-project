@@ -1,7 +1,9 @@
 import socket
 import json
 
-def start_server(host, port, node_id, clock):
+
+def start_server(host, port, node_id, clock, mutex):
+
     server = socket.socket(
         socket.AF_INET,
         socket.SOCK_STREAM
@@ -16,12 +18,15 @@ def start_server(host, port, node_id, clock):
     )
 
     while True:
+
         conn, addr = server.accept()
 
         data = conn.recv(1024).decode()
 
         message = json.loads(data)
 
+        message_type = message["type"]
+        sender_id = message["sender"]
         received_clock = message["clock"]
 
         print(
@@ -31,8 +36,21 @@ def start_server(host, port, node_id, clock):
 
         clock.receive_event(received_clock)
 
+        if message_type == "REQUEST":
+
+            mutex.handle_request(
+                sender_id,
+                received_clock
+            )
+
+        elif message_type == "REPLY":
+
+            mutex.handle_reply(
+                sender_id
+            )
+
         print(
-            f"[Node {node_id}] Received from Node {message['sender']}",
+            f"[Node {node_id}] Received {message_type} from Node {sender_id}",
             flush=True
         )
 

@@ -4,12 +4,18 @@ import threading
 
 from config import NODES
 from server import start_server
-from client import send_message
 from lamport import LamportClock
+from mutual_exclusion import RicartAgrawala
 
 clock = LamportClock()
 
 NODE_ID = int(os.getenv("NODE_ID"))
+
+mutex = RicartAgrawala(
+    NODE_ID,
+    len(NODES),
+    clock
+)
 
 HOST, PORT = NODES[NODE_ID]
 
@@ -20,7 +26,7 @@ print(
 
 server_thread = threading.Thread(
     target=start_server,
-    args=("0.0.0.0", PORT, NODE_ID, clock),
+    args=("0.0.0.0", PORT, NODE_ID, clock, mutex),
     daemon=True
 )
 
@@ -29,23 +35,12 @@ server_thread.start()
 time.sleep(3)
 
 if NODE_ID == 1:
+    time.sleep(1)
+    mutex.request_critical_section()
 
-    timestamp = clock.send_event()
-
-    send_message(
-        "node2",
-        5002,
-        {
-            "sender": NODE_ID,
-            "clock": timestamp,
-            "message": "Hello from node1"
-        }
-    )
-
-    print(
-        f"[Node {NODE_ID}] Sent message with clock {timestamp}",
-        flush=True
-    )
+elif NODE_ID == 2:
+    time.sleep(1)
+    mutex.request_critical_section()
 
 while True:
     time.sleep(1)

@@ -5,21 +5,29 @@ services:
     hostname: node1
     environment:
       NODE_ID: 1
+    volumes:
+      - ./shared_resource.txt:/app/shared_resource.txt
 
   node2:
     build: ./node
     hostname: node2
     environment:
       NODE_ID: 2
+    volumes:
+      - ./shared_resource.txt:/app/shared_resource.txt
 
   node3:
     build: ./node
     hostname: node3
     environment:
       NODE_ID: 3
+    volumes:
+      - ./shared_resource.txt:/app/shared_resource.txt
 
   node4:
     build: ./node
     hostname: node4
     environment:
       NODE_ID: 4
+    volumes:
+      - ./shared_resource.txt:/app/shared_resource.txt
