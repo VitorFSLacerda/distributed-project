@@ -1,0 +1,25 @@
+services:
+
+  node1:
+    build: ./node
+    hostname: node1
+    environment:
+      NODE_ID: 1
+
+  node2:
+    build: ./node
+    hostname: node2
+    environment:
+      NODE_ID: 2
+
+  node3:
+    build: ./node
+    hostname: node3
+    environment:
+      NODE_ID: 3
+
+  node4:
+    build: ./node
+    hostname: node4
+    environment:
+      NODE_ID: 4
