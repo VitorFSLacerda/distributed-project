@@ -14,3 +14,17 @@ Communication:
 
 Execution Environment:
 - Docker
+
+
+
+Before running the project, make sure you have installed:
+
+- Docker
+- Docker Compose
+
+Running the Project.
+Build and start the containers:
+
+```bash
+docker compose up --build
+```
