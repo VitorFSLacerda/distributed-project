@@ -1,31 +1,28 @@
+import threading
 from utils.logger import log
 
 
 class LamportClock:
 
     def __init__(self, node_id=None):
-        self.time = 0
         self.node_id = node_id
-
-    def increment(self):
-        self.time += 1
+        self._time = 0
+        self._lock = threading.Lock()
 
     def send_event(self):
-        self.increment()
-        log(self.node_id, "LAMPORT_SEND", clock=self.time)
-        return self.time
+        with self._lock:
+            self._time += 1
+            t = self._time
+        log(self.node_id, "LAMPORT_SEND", clock=t)
+        return t
 
     def receive_event(self, received_time):
-        old = self.time
-        self.time = max(self.time, received_time) + 1
-
-        log(
-            self.node_id,
-            "LAMPORT_RECV",
-            received=received_time,
-            before=old,
-            after=self.time
-        )
+        with self._lock:
+            old = self._time
+            self._time = max(self._time, received_time) + 1
+            new = self._time
+        log(self.node_id, "LAMPORT_RECV", received=received_time, before=old, after=new)
 
     def get_time(self):
-        return self.time
+        with self._lock:
+            return self._time
