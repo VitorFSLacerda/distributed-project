@@ -5,6 +5,7 @@ services:
     hostname: node1
     environment:
       NODE_ID: 1
+      SCENARIO: ${SCENARIO:-mutex_contention}
     volumes:
       - ./shared_resource.txt:/app/shared_resource.txt
 
@@ -13,6 +14,7 @@ services:
     hostname: node2
     environment:
       NODE_ID: 2
+      SCENARIO: ${SCENARIO:-mutex_contention}
     volumes:
       - ./shared_resource.txt:/app/shared_resource.txt
 
@@ -21,6 +23,7 @@ services:
     hostname: node3
     environment:
       NODE_ID: 3
+      SCENARIO: ${SCENARIO:-mutex_contention}
     volumes:
       - ./shared_resource.txt:/app/shared_resource.txt
 
@@ -29,5 +32,6 @@ services:
     hostname: node4
     environment:
       NODE_ID: 4
+      SCENARIO: ${SCENARIO:-mutex_contention}
     volumes:
       - ./shared_resource.txt:/app/shared_resource.txt
