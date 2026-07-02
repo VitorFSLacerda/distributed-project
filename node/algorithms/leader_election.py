@@ -31,6 +31,8 @@ class BullyElection:
         with self.lock:
             if self.election_in_progress:
                 return   # already running — ignore
+            if self.leader == self.node_id:
+                return   # already leader — no need to re-run election
             self.election_in_progress = True
             self._announced = False
             self.leader = None
